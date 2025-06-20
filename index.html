@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مولّد الفاتورة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+    }
+    .receipt {
+      font-family: 'Tajawal', sans-serif;
+      background-color: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.25rem 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="text-center space-y-6 text-lg">
+    <h1 class="text-2xl font-bold">🧾 فاتورة عشوائية</h1>
+    <button onclick="generateReceipt()" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">✨ توليد فاتورة</button>
+    <button onclick="downloadAsImage()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">⬇️ تحميل الفاتورة كصورة</button>
+    <div id="receiptContainer" class="receipt mt-6 text-left shadow text-base leading-loose space-y-2"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    const products = [
+      { name: "Coca-Cola", price: 125 },
+      { name: "Nouilles jumbo", price: 120 },
+      { name: "Amir Clean", price: 250 },
+      { name: "Celia lait", price: 180 },
+      { name: "Molfix", price: 750 },
+      { name: "Venus", price: 300 },
+      { name: "Maxon", price: 350 },
+      { name: "Ifruit Jus", price: 100 },
+      { name: "Rouiba", price: 110 },
+      { name: "Ramy", price: 90 },
+      // ... يمكنك إضافة المزيد
+    ];
+
+    function generateReceipt() {
+      const container = document.getElementById("receiptContainer");
+      const selected = products.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+      let total = 0;
+      let now = new Date();
+      let dateStr = now.toLocaleString("fr-DZ");
+
+      let html = `<h2 class="text-center font-bold mb-2">SUPÉRETTE</h2>`;
+      html += `<div class="mb-2 text-sm">Client: Divers<br>N°: 0<br>VAL: 0.00 DA</div>`;
+      html += `
+        <table>
+          <thead>
+            <tr class="bg-gray-100">
+              <th>Produit</th>
+              <th>Qte</th>
+              <th>P.U</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      selected.forEach(prod => {
+        const qty = Math.floor(Math.random() * 3) + 1;
+        const lineTotal = qty * prod.price;
+        total += lineTotal;
+        html += `
+          <tr>
+            <td>${prod.name}</td>
+            <td>${qty}</td>
+            <td>${prod.price}</td>
+            <td>${lineTotal}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </tbody>
+        </table>
+        <p>Total: ${total.toFixed(2)} DA</p>
+        <p>Net à payer: ${total.toFixed(2)} DA</p>
+        <p>Reçu: 0.00 DA &nbsp; Rendu: 0.00 DA</p>
+        <p>Le: ${dateStr}</p>
+        <p class="text-center mt-4">Merci De Votre Visite</p>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function downloadAsImage() {
+      const receipt = document.getElementById("receiptContainer");
+      if (!receipt.innerHTML.trim()) {
+        alert("يرجى توليد الفاتورة أولاً.");
+        return;
+      }
+
+      html2canvas(receipt, { scale: 3 }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "facture.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
