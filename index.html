@@ -30,7 +30,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex items-center justify-center" onload="generateReceipt()">
   <div class="text-center space-y-6 text-lg">
     <h1 class="text-2xl font-bold">🧾 فاتورة عشوائية</h1>
     <button onclick="generateReceipt()" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">✨ توليد فاتورة</button>
@@ -51,7 +51,6 @@
       { name: "Ifruit Jus", price: 100 },
       { name: "Rouiba", price: 110 },
       { name: "Ramy", price: 90 },
-      // ... يمكنك إضافة المزيد
     ];
 
     function generateReceipt() {
